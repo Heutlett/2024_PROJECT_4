@@ -1,7 +1,8 @@
 eval $(minikube docker-env)
-docker build -t test-api:latest .
-docker tag test-api:latest menaleon/test-api:latest
-docker login
-docker push menaleon/test-api:latest
-kubectl apply -f test-api-deployment.yaml
-kubectl apply -f test-api-service.yaml
+cd crear_usuario/ && ./run.sh && cd ../
+
+kubectl scale deployment api-crear-usuario-service --replicas=0
+kubectl delete deployment api-crear-usuario-service
+kubectl apply -f multicontainer-deployment.yaml
+kubectl delete service api-crear-usuario-service
+kubectl apply -f multicontainer-service.yaml

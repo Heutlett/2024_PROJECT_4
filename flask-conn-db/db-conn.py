@@ -12,7 +12,7 @@ cnxn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER='+server+';
 cursor = cnxn.cursor()
 
 #OBTENER COMIDAS
-@app.route('/foods', methods=['GET'])
+@app.route('/', methods=['GET'])
 def obtener_alimentos():
     cursor.execute("SELECT * FROM Food")
     alimentos = []
@@ -62,4 +62,4 @@ def eliminar_alimento():
     return jsonify({'mensaje': 'Alimento eliminado correctamente'})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000,debug=True)
