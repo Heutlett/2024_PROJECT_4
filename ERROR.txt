@@ -1,0 +1,6 @@
+https://chatgpt.com/share/3222da93-5152-4090-a2f0-a7a5c227a257
+
+eval $(minikube docker-env)
+docker build -t mi-aplicacion-flask .
+
+minikube service test-api-service --url
