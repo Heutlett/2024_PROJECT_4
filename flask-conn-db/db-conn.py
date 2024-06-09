@@ -4,7 +4,7 @@ import pyodbc
 app = Flask(__name__)
 
 # Configuración de la conexión a la base de datos
-server = '127.0.0.1,39061' # ESTO DEBE SER EL IP Y PUERTO DE TU SERVIDOR SQL
+server = 'sqlserver-service' # ESTO DEBE SER EL IP Y PUERTO DE TU SERVIDOR SQL
 database = 'master'
 username = 'sa'
 password = 'Admin1234!'
@@ -62,4 +62,4 @@ def eliminar_alimento():
     return jsonify({'mensaje': 'Alimento eliminado correctamente'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
