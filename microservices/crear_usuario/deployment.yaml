@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-api
+  name: crear-usuario
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: test-api
+      app: crear-usuario
   template:
     metadata:
       labels:
-        app: test-api
+        app: crear-usuario
     spec:
       containers:
-      - name: test-api
-        image: menaleon/test-api:latest
+      - name: crear-usuario
+        image: jusfb18/crear-usuario:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 5001

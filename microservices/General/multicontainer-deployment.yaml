@@ -29,3 +29,8 @@ spec:
         image: jusfb18/cambiar-contrasena:latest
         ports:
         - containerPort: 5004
+      - name: crear-reserva
+        image: jusfb18/crear-reserva:latest
+        ports:
+        - containerPort: 5007
+
