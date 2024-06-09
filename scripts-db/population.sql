@@ -308,32 +308,49 @@ VALUES (1, 1),
     (5, 8);
 -- Insertar datos en la tabla Recommendation
 -- Obtener los IDs de los platos principales, bebidas y postres
+
 SELECT @MainCourseID = MIN(Food_ID)
 FROM Food_Type_Association
 WHERE Type_ID = @MainCourseID;
+
 SELECT @DrinkID = MIN(Food_ID)
 FROM Food_Type_Association
 WHERE Type_ID = @DrinkID;
+
 SELECT @DessertID = MIN(Food_ID)
 FROM Food_Type_Association
 WHERE Type_ID = @DessertID;
+
+DECLARE @Counter1 INT = @MainCourseID+1;
+DECLARE @Counter2 INT = @DessertID+1;
+DECLARE @Counter3 INT = @DrinkID+1;
 -- Insertar recomendaciones emparejando platos principales con bebidas y postres
-WHILE @MainCourseID IS NOT NULL BEGIN
-INSERT INTO Recommendation (Main_Dish_ID, Drink_ID, Dessert_ID)
-VALUES (@MainCourseID, @DrinkID, @DessertID);
--- Obtener los siguientes IDs
-SELECT @MainCourseID = MIN(Food_ID)
-FROM Food_Type_Association
-WHERE Type_ID = @MainCourseID
+WHILE @Counter1 <21 BEGIN
+    INSERT INTO Recommendation (Main_Dish_ID, Drink_ID, Dessert_ID)
+    VALUES (@MainCourseID, @DrinkID, @DessertID);
+    -- Obtener los siguientes IDs
+    SELECT @Counter1
+    FROM Food_Type_Association
+    WHERE Type_ID = @MainCourseID
     AND Food_ID > @MainCourseID;
-SELECT @DrinkID = MIN(Food_ID)
-FROM Food_Type_Association
-WHERE Type_ID = @DrinkID
+
+    SELECT @Counter3
+    FROM Food_Type_Association
+    WHERE Type_ID = @DrinkID
     AND Food_ID > @DrinkID;
-SELECT @DessertID = MIN(Food_ID)
-FROM Food_Type_Association
-WHERE Type_ID = @DessertID
+
+    SELECT @Counter2
+    FROM Food_Type_Association
+    WHERE Type_ID = @DessertID
     AND Food_ID > @DessertID;
+
+    SET @MainCourseID = @Counter1;
+    SET @DrinkID =@Counter3;
+    SET @DessertID=@Counter2;
+
+    SET @Counter1 = @Counter1+1;
+    SET @Counter2 = @Counter2+1;
+    SET @Counter3 = @Counter3+1;
 END;
 -- Insertar una recomendación adicional
 INSERT INTO Recommendation (Main_Dish_ID, Drink_ID, Dessert_ID)
