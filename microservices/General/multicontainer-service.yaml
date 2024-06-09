@@ -27,3 +27,8 @@ spec:
       port: 5004
       targetPort: 5004  # Puerto del contenedor crear-usuario
       nodePort: 30007  # Puerto asignado en los nodos del clúster
+    - name: crear-reserva
+      protocol: TCP
+      port: 5007
+      targetPort: 5007  # Puerto del contenedor crear-usuario
+      nodePort: 30010  # Puerto asignado en los nodos del clúster

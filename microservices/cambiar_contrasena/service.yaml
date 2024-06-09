@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cambiar-contrasena-service
+spec:
+  selector:
+    app: cambiar-contrasena
+  type: NodePort
+  ports:
+    - name: cambiar-contrasena
+      protocol: TCP
+      port: 5004
+      targetPort: 5004  # Puerto del contenedor crear-usuario
+      nodePort: 30007  # Puerto asignado en los nodos del clúster

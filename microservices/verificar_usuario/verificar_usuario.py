@@ -119,19 +119,16 @@ def verificar_usuario():
     respuesta = {}
     request_args = request.args
     path = request.path
-    data = request.json # {"data": {"method: "verificar-usuario, "token": "asdewf"}}
-
     if path == "/verificar-usuario" and request.method == 'GET':
         try:
-            token = data.get('data').get('token', None)
-            method = data.get('data').get('method', None)
+            token = request_args.get('token', None)
         except Exception as e:
             print(f"Error al obtener los datos: {e}")
             respuesta["status"] = 400
             respuesta["message"] = "Error al obtener los datos."
             return jsonify(respuesta), 400, headers
 
-        if token and method == "verificar-usuario":
+        if token:
             return verificar_usuario_callback(token, headers)
         else:
             respuesta["status"] = 400

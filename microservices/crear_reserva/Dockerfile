@@ -29,7 +29,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Exponer el puerto de la aplicación Flask
-EXPOSE 5001
+EXPOSE 5007
 
 # Define el comando por defecto para ejecutar la aplicación
-CMD ["python", "crear_usuario.py"]
+CMD ["python", "crear_reserva.py"]

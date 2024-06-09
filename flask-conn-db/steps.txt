@@ -1,7 +1,0 @@
-pip install pyodbc
-pip install Flask
-
-instalar un driver para pyodbc siguiendo estos pasos:
-https://learn.microsoft.com/en-us/sql/connect/python/pyodbc/step-1-configure-development-environment-for-pyodbc-python-development?view=sql-server-ver16&tabs=linux
-
-python3 db-conn.py
