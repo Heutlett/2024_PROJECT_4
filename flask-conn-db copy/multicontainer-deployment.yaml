@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-crear-usuario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-crear-usuario
+  template:
+    metadata:
+      labels:
+        app: api-crear-usuario
+    spec:
+      containers:
+      - name: test-api
+        image: jusfb18/test-api:latest
+        ports:
+        - containerPort: 5000
+      - name: crear-usuario
+        image: jusfb18/crear-usuario:latest
+        ports:
+        - containerPort: 5001
+      - name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+        - containerPort: 1433
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          value: "Admin1234!"
