@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtener-reservas-pasadas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obtener-reservas-pasadas
+  template:
+    metadata:
+      labels:
+        app: obtener-reservas-pasadas
+    spec:
+      containers:
+      - name: obtener-reservas-pasadas
+        image: jusfb18/obtener-reservas-pasadas:latest
+        ports:
+        - containerPort: 5012
+

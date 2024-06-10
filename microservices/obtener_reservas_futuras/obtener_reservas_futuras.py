@@ -1,9 +1,11 @@
 import json
 import jwt
+import pytz
 import hashlib
 import pyodbc
 from flask import Flask, jsonify, request
 import requests
+import datetime
 
 app = Flask(__name__)
 
@@ -92,7 +94,6 @@ def crear_reserva_callback(token, restaurant_id, number_of_people, reservation_d
                 "message": "Token invalido"
             }
             return jsonify(mensaje),400, headers
-
     else:        
         mensaje = {
             "data": "",
@@ -178,102 +179,112 @@ def crear_reserva_callback(token, restaurant_id, number_of_people, reservation_d
             "message": f"Error al crear reserva: {str(e)}"
         } 
         return jsonify(mensaje), 500, headers
-        
-@app.route("/obtener-reservas", methods=["POST", "OPTIONS"])
-def obtener_reservas():
-    # CORS related
-        if request.method == "OPTIONS":
-            # Allows GET requests from any origin with the Content-Type
-            # header and caches preflight response for an 3600s
-            headers = {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Max-Age": "3600",
-            }
 
-            return ("", 204, headers)
+secret_key="6af00dfe63f6495195a3341ef6406c2c"
+def obtener_reservas_futuras(fecha,hora, username, headers):
+    respuesta = {}
     
+    # La query debe usar fecha y hora para obtener las reservas pasadas
+    query = f"SELECT * FROM Reservations WHERE Date_Reserved = '{fecha}' AND Start_Time > '{hora}' OR Date_Reserved > '{fecha}' AND User_ID = '{username}';"
+    result = usar_bd_con_return(query)
+    mensaje = {}
+    mensaje["data"] = []
+    for elem in result:
+        mensaje["data"].append({
+            "Reservation_ID": elem[0],
+            "User_ID": elem[1],
+            "Restaurant_ID": elem[2],
+            "Number_Of_People": elem[3],
+            "Date_Reserved": elem[4].strftime('%Y-%m-%d'),  # Convertir a cadena de texto en formato 'YYYY-MM-DD'
+            "Start_Time": elem[5].strftime('%H:%M:%S'),    # Convertir a cadena de texto en formato 'HH:MM:SS'
+            "End_Time": elem[6].strftime('%H:%M:%S')       # Convertir a cadena de texto en formato 'HH:MM:SS'
+        })
+
+    return jsonify(mensaje), 200, headers
+
+@app.route("/obtener-reserva/", methods=['GET', 'OPTIONS'])
+def obtener_reserva():
+    if request.method == "OPTIONS":
+        # Allows GET requests from any origin with the Content-Type
+        # header and caches preflight response for an 3600s
         headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "3600",
+        }
+        return "", 204, headers
+   # Set CORS headers for main requests
+    headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": "true",
-        }
+    }
 
-        request_args = request.args
-        print("REQUEST ARGS: ", request_args)
-        path = request.path
-        respuesta = {}
+    request_args = request.args
+    path = request.path
+    respuesta = {}
+    print(request_args)
 
-        print("BREAKPOINT 1")
-        token_decoded = {}
+    token_decoded = {}
 
-        if "time" in request_args and request_args['time'] != "" and request_args['time'] is not None and request_args['time'] != "all":
-            print("BREAKPOINT 2")
+    if path == "/obtener-reserva/" and request.method == 'GET':
+        try:
+            token = request_args.get("token")
+            time = request_args.get("time")
+        except Exception as e:
+            print(f"Error al obtener los datos: {e}")
+            respuesta["status"] = 400
+            respuesta["message"] = "Error al obtener los datos."
+            return jsonify(respuesta), 400, headers
 
-            # CAMBIAR EL FINAL DE LA URL
-            url = f"https://us-central1-soa-project3.cloudfunctions.net/verificar-usuario/?token={request_args['token']}"
-
+        if token is not None and time is not None:
+            if time != "futuras":
+                respuesta["status"] = 400
+                respuesta["message"] = "Error: El parametro 'time' debe ser 'futuras'."
+                return jsonify(respuesta), 400, headers
+            url = f"http://192.168.49.2:30006/verificar-usuario?token={token}"
             response = requests.get(url)
             if response.status_code == 200:
-                print("Codigo: 200. Token valido")
-                print(response.json())
-                print(f"Token: {request_args['token']}")
-                token_decoded  = jwt.decode(jwt=request_args['token'], key=secret_key, algorithms=["HS256"])
-            else:
-                print("Codigo: 400. Token invalido")
-                
+                try:
+                    token_decoded  = jwt.decode(jwt=token, key=secret_key, algorithms=["HS256"])
+                except Exception as e:
+                    mensaje = {
+                        "data": "",
+                        "status": 400,
+                        "message": "Token invalido"
+                    }
+                    return jsonify(mensaje),400, headers
+            else:        
                 mensaje = {
                     "data": "",
                     "status": 400,
                     "message": "Token invalido"
                 }
+                return jsonify(mensaje),400, headers
             
+            # verificar datos del usuario
             username = token_decoded['username']
+            # Definir la zona horaria US-Central
+            us_central_tz = pytz.timezone('US/Central')
 
-        print("BREAKPOINT 3")
+            # Obtener la hora actual en la zona horaria US-Central
+            hora_actual_us_central = datetime.datetime.now(us_central_tz)
 
-        # Definir la zona horaria US-Central
-        us_central_tz = pytz.timezone('US/Central')
+            # Convertir a la zona horaria de Arizona
+            zona_horaria_arizona = pytz.timezone('US/Arizona')
+            hora_actual_arizona = hora_actual_us_central.astimezone(zona_horaria_arizona)
 
-        # Obtener la hora actual en la zona horaria US-Central
-        hora_actual_us_central = datetime.datetime.now(us_central_tz)
-
-        # Convertir a la zona horaria de Arizona
-        zona_horaria_arizona = pytz.timezone('US/Arizona')
-        hora_actual_arizona = hora_actual_us_central.astimezone(zona_horaria_arizona)
-
-        hora_actual = hora_actual_us_central.strftime('%H:%M:%S')
-        fecha_actual = hora_actual_us_central.strftime('%Y-%m-%d')
-
-        print("Hora actual en US-Central (Texas):", hora_actual_us_central)
-        print("Hora actual en Arizona:", hora_actual_arizona)
-
-        if "time" in request_args:
-            validate = (request_args['time'] == "pasadas" or request_args['time'] == "futuras" or request_args['time'] == "all")
+            hora_actual = hora_actual_us_central.strftime('%H:%M:%S')
+            fecha_actual = hora_actual_us_central.strftime('%Y-%m-%d')
+            return obtener_reservas_futuras(fecha_actual,hora_actual, username, headers)
         else:
-            validate = ("reservation_id" in request_args and request_args['reservation_id'] != "")
-        if not validate:
-            respuesta["message"] = "Error: Peticion incorrecta"
-            return (json.dumps(respuesta), 400, headers)
-
-
-        print("BREAKPOINT 4")
-
-        if path == "/" and request.method == 'GET':
-            if "time" in request_args:
-                tiempo = request_args.get("time")
-            
-                if tiempo == "all":
-                    return (obtener_todas_reservas(fecha_actual,hora_actual), 200, headers)
-            
-            else:
-                respuesta["message"] = "Error: Peticion incorrecta"
-                return (json.dumps(respuesta), 400, headers)
-        else:
-            respuesta["message"] = "Error: Metodo no valido."
-            return (json.dumps(respuesta), 404, headers)
-    
-    
+            respuesta["status"] = 400
+            respuesta["message"] = "Error: Faltan parámetros 'username' o 'password'."
+            return jsonify(respuesta), 400, headers
+    else:
+        respuesta["status"] = 404
+        respuesta["message"] = "Error: Método no válido."
+        return jsonify(respuesta), 404, headers
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5010,debug=True)
+    app.run(host='0.0.0.0', port=5015,debug=True)
