@@ -5,7 +5,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 def getconn():
-    server = '192.168.49.2,30732' # ESTO DEBE SER EL IP Y PUERTO DE TU SERVIDOR SQL
+    server = 'sqlserver-service' # ESTO DEBE SER EL IP Y PUERTO DE TU SERVIDOR SQL
     database = 'master'
     username = 'sa'
     password = 'Admin1234!'
