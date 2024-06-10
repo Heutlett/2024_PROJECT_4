@@ -4,11 +4,18 @@ import json
 
 app = Flask(__name__)
 
-base_url = "http://localhost:5000/broker"
+base_url = "http://192.168.49.2:"
 
 metodos = {}
+
+# GET
+
+metodos["obtener-reserva-puntual"] = {
+    "url":f"{base_url}30016/obtener-reserva-puntual",
+    "method":"GET"
+}
 metodos["obtener-usuario"] = {
-    "url": f"{base_url}?method=obtener-usuario",
+    "url": f"{base_url}30005/",
     "method": "GET"
 }
 
@@ -34,7 +41,7 @@ def hacer_metodo(metodo, data):
 
 
 # entry point de la cloud function
-@app.route('/broker', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+@app.route('/', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def broker():
     if request.method == "OPTIONS":
         # Allows GET requests from any origin with the Content-Type
@@ -61,9 +68,19 @@ def broker():
 
     if request.method == "GET":
         try:
-            if path == "/broker" and request_args.get("method") == "obtener-usuario":
-                resultado,status_code = hacer_metodo(metodos["obtener-usuario"]["method"], request_args)
-                return resultado, status_code, headers
+            if path == "/":
+                try:
+                    username = request_args.get("username")
+                    password = request_args.get("password")
+                except Exception as e:
+                    respuesta = {
+                        "data": "",
+                        "status": 400,
+                        "message": "Error: Parametro 'username' o 'password' no encontrado."
+                    }
+                    return jsonify(respuesta), 400, headers
+                resultado,status_code = hacer_metodo(metodos["obtener-usuario"]["method"], f"{metodos['obtener-usuario']['url']}?username={username}&password={password}")
+                return jsonify(resultado), status_code, headers
             else:
                 respuesta = {
                     "data": "",
@@ -143,4 +160,4 @@ def broker():
         return jsonify(respuesta), 400, headers
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5016, debug=True)
