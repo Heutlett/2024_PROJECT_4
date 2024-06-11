@@ -51,16 +51,14 @@ def obtener_calendario_callback(date_request, start_time_request, restaurant_id,
     # Obtener todas las mesas disponibles para una fecha y hora especifica
 
     try:
-        print("Date request: " + date_request)
-        print("Start time request: " + start_time_request)
 
         # obtener todas las mesas
-        mesas = usar_bd_con_return(f"SELECT * FROM Tables WHERE Restaurant_ID = '{restaurant_id}'")
-        #return str(mesas), 200, headers             
-
+        mesas = usar_bd_con_return(f"SELECT * FROM Tables WHERE Restaurant_ID = '{restaurant_id}'")       
+        #return str(start_time_request), 200, headers
         # obtener las mesas ocupadas para esa fecha y hora
         decena = start_time_request[0]
         unidad = start_time_request[1]
+
         end_time = ""
         # sumar 2 horas a la hora de inicio para obtener la hora de fin
         if decena == "0":  
@@ -83,10 +81,14 @@ def obtener_calendario_callback(date_request, start_time_request, restaurant_id,
             else: # si la suma es mayor a 24
                 end_time = "00" + start_time_request[2:]
 
-        print("End time  " + end_time)
-
         mesas_ocupadas = usar_bd_con_return(f"SELECT * FROM Table_Availability WHERE Date_Reserved = '{date_request}' AND Start_Time >= '{start_time_request}' AND End_Time <= '{end_time}'")
         
+        if mesas is None or mesas_ocupadas is None:
+            mensaje['data']['available_tables'] = []
+            mensaje['status'] = 404
+            mensaje['message'] = "No hay mesas disponibles para la fecha y hora solicitada."
+            return jsonify(mensaje), 404, headers
+
         # cuando todas las mesas estan ocupadas, no hay mesas disponibles
         # esto puede pasar en eventos especiales
         if len(mesas_ocupadas) == len(mesas):
@@ -156,7 +158,6 @@ def obtener_calendario():
         except Exception as e:
             respuesta["message"] = "Error: Parametro 'reservation_id' no encontrado."
             return jsonify(respuesta), 400, headers
-    
         return obtener_calendario_callback(date, start_time, restaurant_id, headers)
     else:
         respuesta["message"] = "Error: Metodo no valido."
