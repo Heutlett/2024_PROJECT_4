@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: editar-reserva
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: editar-reserva
+  template:
+    metadata:
+      labels:
+        app: editar-reserva
+    spec:
+      containers:
+      - name: editar-reserva
+        image: jusfb18/editar-reserva:latest
+        ports:
+        - containerPort: 5009
+

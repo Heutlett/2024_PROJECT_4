@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtener-calendario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obtener-calendario
+  template:
+    metadata:
+      labels:
+        app: obtener-calendario
+    spec:
+      containers:
+      - name: obtener-calendario
+        image: menaleon/obtener-calendario:latest
+        ports:
+        - containerPort: 5015
+

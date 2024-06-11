@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microrestaurant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microrestaurant
+  template:
+    metadata:
+      labels:
+        app: microrestaurant
+    spec:
+      containers:
+      - name: crear-usuario
+        image: jusfb18/crear-usuario:latest
+        ports:
+        - containerPort: 5001
+      - name: obtener-usuario
+        image: jusfb18/obtener-usuario:latest
+        ports:
+        - containerPort: 5002
+      - name: verificar-usuario
+        image: jusfb18/verificar-usuario:latest
+        ports:
+        - containerPort: 5003
+      - name: cambiar-contrasena
+        image: jusfb18/cambiar-contrasena:latest
+        ports:
+        - containerPort: 5004
+      - name: crear-reserva
+        image: jusfb18/crear-reserva:latest
+        ports:
+        - containerPort: 5007
+

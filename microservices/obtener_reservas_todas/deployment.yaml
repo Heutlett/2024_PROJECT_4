@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtener-reservas-todas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obtener-reservas-todas
+  template:
+    metadata:
+      labels:
+        app: obtener-reservas-todas
+    spec:
+      containers:
+      - name: obtener-reservas-todas
+        image: jusfb18/obtener-reservas-todas:latest
+        ports:
+        - containerPort: 5011
+

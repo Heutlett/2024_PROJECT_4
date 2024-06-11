@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crear-usuario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crear-usuario
+  template:
+    metadata:
+      labels:
+        app: crear-usuario
+    spec:
+      containers:
+      - name: crear-usuario
+        image: jusfb18/crear-usuario:latest
+        ports:
+        - containerPort: 5001

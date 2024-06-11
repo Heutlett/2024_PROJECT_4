@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtener-reservas-futuras
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obtener-reservas-futuras
+  template:
+    metadata:
+      labels:
+        app: obtener-reservas-futuras
+    spec:
+      containers:
+      - name: obtener-reservas-futuras
+        image: jusfb18/obtener-reservas-futuras:latest
+        ports:
+        - containerPort: 5015
+
