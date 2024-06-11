@@ -20,8 +20,9 @@ services = {
     "obtener-usuario":f"{baseurl}30005/obtener-usuario", # funciona
     "obtener-menu": f"{baseurl}30019/obtener-menu", # funciona
     "obtener-recomendacion": f"{baseurl}30020/obtener-recomendacion", # funciona
-    "obtener-calendario": f"{baseurl}30021/obtener-calendario", # CORREGIR
+    "obtener-calendario": f"{baseurl}30021/obtener-calendario", # funciona
     "feedback-chatbot": f"{baseurl}30022/feedback-chatbot", # funciona
+    "ampliar-disponibilidad-reserva": f"{baseurl}30023/ampliar-disponibilidad-reserva", # AGREGAR
 }
 
 # entry point de la cloud function
@@ -84,6 +85,12 @@ def broker(service_name):
             if service_name == "feedback-chatbot":
                 texto = args.get('texto')
                 service_url += f"?texto={texto}"
+
+            if service_name == "obtener-calendario":
+                date = args.get('date')
+                start_time = args.get('start_time')
+                restaurant_id = args.get('restaurant_id')
+                service_url += f"?date={date}&start_time={start_time}&restaurant_id={restaurant_id}"
             
             response = requests.get(service_url)
 
@@ -93,6 +100,7 @@ def broker(service_name):
                 response = requests.post(service_url, json=body, headers=headers)
             except:
                 return jsonify("Error con los datos"),400,headers
+            
         elif request.method == 'PUT':
             try:
                 body = request.json if request.json else {}
