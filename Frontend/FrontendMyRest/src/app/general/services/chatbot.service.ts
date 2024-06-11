@@ -10,6 +10,6 @@ export class ChatbotService {
   }
 
   chatMessage(message: string) {
-    return this.http.get<any>(`https://us-central1-soa-project3.cloudfunctions.net/feedback-chatbot/?texto=${message}`);
+    return this.http.get<any>(`http://192.168.49.2:30022/feedback-chatbot?texto=${message}`);
   }
 }

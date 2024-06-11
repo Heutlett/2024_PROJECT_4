@@ -10,17 +10,18 @@ export class VerificationService {
   constructor(private http:HttpClient) { }
 
   getReservaciones():Observable<any>{
-    const url = 'https://us-central1-soa-project3.cloudfunctions.net/obtener-reserva/?time=all';
+    const url = 'http://192.168.49.2:30014/obtener-reserva/';
     return this.http.get<any>(url);
   }
 
   getReservacionesPasadas(client1:string):Observable<any>{
-    const url = `https://us-central1-soa-project3.cloudfunctions.net/obtener-reservas/?time=pasadas&user_id=${client1}`;
+    const url = `http://192.168.49.2:30017/obtener-reserva/?time=futuras&token=${client1}`;
     return this.http.get<any>(url);
   }
 
   getReservacionesFuturas(client1:string):Observable<any>{
-    const url = `https://us-central1-soa-project3.cloudfunctions.net/obtener-reservas/?time=futuras&user_id=${client1}`;
+    // http://192.168.49.2::30015/obtener-reserva/?time=pasadas&token=
+    const url = `http://192.168.49.2:30015/obtener-reserva/?time=pasadas&token=${client1}`;
     return this.http.get<any>(url);
   }
 }

@@ -20,10 +20,12 @@ export class EditReservationComponent implements OnInit{
   future_reservations:any = new Array<any>();
   displayedColumns: string[] = ['Reservation_ID', 'User_ID', 'Number_Of_People', 'Date_Reserved', 'Start_Time','End_Time'];
   username;
+  token;
 
   constructor(private verificationService:VerificationService, private http: HttpClient,private router:Router) {
     this.username = localStorage.getItem('username');
     console.log(this.username);
+    this.token = localStorage.getItem('token')!;
   }
 
   ngOnInit(){
@@ -50,7 +52,7 @@ export class EditReservationComponent implements OnInit{
     if(!this.username)return;
     console.log(`Buscando reservacion pasada de cliente: ${this.username}`);
     this.clearData();
-    this.verificationService.getReservaciones().subscribe((data)=>{
+    this.verificationService.getReservacionesPasadas(this.token).subscribe((data)=>{
       console.log(data)
       this.all_reservations = data.data.filter((reservation:any)=>{
         return reservation.User_ID === this.username && this.isStartDatePast(new Date(reservation.Date_Reserved))
@@ -63,7 +65,7 @@ export class EditReservationComponent implements OnInit{
     if(!this.username)return;
     console.log(`Buscando reservacion futura de cliente: ${this.username}`);
     this.clearData();
-    this.verificationService.getReservaciones().subscribe((data)=>{
+    this.verificationService.getReservacionesFuturas(this.token).subscribe((data)=>{
       console.log(data)
       this.future_reservations = data.data.filter((reservation:any)=>{
         return reservation.User_ID === this.username && !this.isStartDatePast(new Date(reservation.Date_Reserved))
