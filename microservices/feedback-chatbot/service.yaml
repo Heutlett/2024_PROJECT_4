@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedback-chatbot-service
+spec:
+  selector:
+    app: feedback-chatbot
+  type: NodePort
+  ports:
+    - name: feedback-chatbot
+      protocol: TCP
+      port: 5020
+      targetPort: 5020  # Puerto del contenedor feedback-chatbot
+      nodePort: 30022   # Puerto asignado en los nodos del clúster

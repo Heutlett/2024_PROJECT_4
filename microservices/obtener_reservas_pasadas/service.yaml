@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: obtener-reservas-pasadas-service
+spec:
+  selector:
+    app: obtener-reservas-pasadas
+  type: NodePort
+  ports:
+    - name: obtener-reservas-pasadas
+      protocol: TCP
+      port: 5012
+      targetPort: 5012  # Puerto del contenedor obtener-reservas-pasadas
+      nodePort: 30015  # Puerto asignado en los nodos del clúster

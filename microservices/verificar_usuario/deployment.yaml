@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verificar-usuario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: verificar-usuario
+  template:
+    metadata:
+      labels:
+        app: verificar-usuario
+    spec:
+      containers:
+      - name: verificar-usuario
+        image: jusfb18/verificar-usuario:latest
+        ports:
+        - containerPort: 5003

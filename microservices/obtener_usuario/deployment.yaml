@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtener-usuario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obtener-usuario
+  template:
+    metadata:
+      labels:
+        app: obtener-usuario
+    spec:
+      containers:
+      - name: obtener-usuario
+        image: jusfb18/obtener-usuario:latest
+        ports:
+        - containerPort: 5002

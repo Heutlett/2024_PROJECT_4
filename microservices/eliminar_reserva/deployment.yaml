@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eliminar-reserva
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eliminar-reserva
+  template:
+    metadata:
+      labels:
+        app: eliminar-reserva
+    spec:
+      containers:
+      - name: eliminar-reserva
+        image: jusfb18/eliminar-reserva:latest
+        ports:
+        - containerPort: 5010
+

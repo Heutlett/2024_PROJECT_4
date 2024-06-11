@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crear-reserva
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crear-reserva
+  template:
+    metadata:
+      labels:
+        app: crear-reserva
+    spec:
+      containers:
+      - name: crear-reserva
+        image: jusfb18/crear-reserva:latest
+        ports:
+        - containerPort: 5007
+

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cambiar-contrasena
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cambiar-contrasena
+  template:
+    metadata:
+      labels:
+        app: cambiar-contrasena
+    spec:
+      containers:
+      - name: cambiar-contrasena
+        image: jusfb18/cambiar-contrasena:latest
+        ports:
+        - containerPort: 5004
