@@ -22,6 +22,7 @@ services = {
     "obtener-recomendacion": f"{baseurl}30020/obtener-recomendacion", # funciona
     "obtener-calendario": f"{baseurl}30021/obtener-calendario", # funciona
     "feedback-chatbot": f"{baseurl}30022/feedback-chatbot", # funciona
+    "ampliar-disponibilidad-reserva": f"{baseurl}30023/ampliar-disponibilidad-reserva", # AGREGAR
 }
 
 # entry point de la cloud function
@@ -99,6 +100,7 @@ def broker(service_name):
                 response = requests.post(service_url, json=body, headers=headers)
             except:
                 return jsonify("Error con los datos"),400,headers
+            
         elif request.method == 'PUT':
             try:
                 body = request.json if request.json else {}
