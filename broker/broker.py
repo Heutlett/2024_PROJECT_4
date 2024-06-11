@@ -18,6 +18,8 @@ services = {
     "obtener-reservas-pasadas": f"{baseurl}30015/obtener-reserva/", # REDEPLOY
     "obtener-reservas-todas": f"{baseurl}30014/obtener-reserva/", # REDEPLOY
     "obtener-usuario":f"{baseurl}30005/obtener-usuario", # funciona
+    "obtener-menu": f"{baseurl}30019/obtener-menu", # funciona
+    "obtener-recomendacion": f"{baseurl}30020/obtener-recomendacion", # funciona
     "obtener-calendario": f"{baseurl}puerto/obtener-calendario",
 }
 
@@ -70,6 +72,13 @@ def broker(service_name):
                 time = args.get('time')
                 service_url += f"?time={time}"
             
+            if service_name == "obtener-recomendacion":
+                dish1 = args.get('dish1',None)
+                dish2 = args.get('dish2',None)
+                if dish1 is not None:
+                    service_url += f"?dish1={dish1}"
+                if dish2 is not None:
+                    service_url += f"&dish2={dish2}" 
             
             response = requests.get(service_url)
 
