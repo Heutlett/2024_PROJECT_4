@@ -12,11 +12,9 @@ export class LoginService {
   constructor(private http:HttpClient) { }
 
   logUser(user:string, password:string){
-    var url = `https://us-central1-soa-project3.cloudfunctions.net/obtener-usuario/?username=${user}&password=${password}`
+    var url = `http://192.168.49.2:30018/obtener-usuario?username=${user}&password=${password}`
 
-    console.log("----------------------")
-    console.log(password)
-    console.log("----------------------")
+    
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
