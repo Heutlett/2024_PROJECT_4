@@ -15,10 +15,13 @@ services = {
     "eliminar-reserva":f"{baseurl}30013/eliminar-reserva", # CORREGIR QUE SOLO PARA TOKEN DE ADMIN
     "obtener-reserva-puntual": f"{baseurl}30016/obtener-reserva/", # funciona
     "obtener-reservas-futuras": f"{baseurl}30017/obtener-reserva/", # funciona
-    "obtener-reservas-pasadas": f"{baseurl}30015/obtener-reserva/", # REDEPLOY
-    "obtener-reservas-todas": f"{baseurl}30014/obtener-reserva/", # REDEPLOY
+    "obtener-reservas-pasadas": f"{baseurl}30015/obtener-reserva/", # funciona
+    "obtener-reservas-todas": f"{baseurl}30014/obtener-reserva/", # funciona
     "obtener-usuario":f"{baseurl}30005/obtener-usuario", # funciona
-    "obtener-calendario": f"{baseurl}puerto/obtener-calendario",
+    "obtener-menu": f"{baseurl}30019/obtener-menu", # funciona
+    "obtener-recomendacion": f"{baseurl}30020/obtener-recomendacion", # funciona
+    "obtener-calendario": f"{baseurl}30021/obtener-calendario", # CORREGIR
+    "feedback-chatbot": f"{baseurl}30022/feedback-chatbot", # funciona
 }
 
 # entry point de la cloud function
@@ -70,6 +73,17 @@ def broker(service_name):
                 time = args.get('time')
                 service_url += f"?time={time}"
             
+            if service_name == "obtener-recomendacion":
+                dish1 = args.get('dish1',None)
+                dish2 = args.get('dish2',None)
+                if dish1 is not None:
+                    service_url += f"?dish1={dish1}"
+                if dish2 is not None:
+                    service_url += f"&dish2={dish2}" 
+            
+            if service_name == "feedback-chatbot":
+                texto = args.get('texto')
+                service_url += f"?texto={texto}"
             
             response = requests.get(service_url)
 

@@ -9,6 +9,6 @@ spec:
   ports:
     - name: obtener-calendario
       protocol: TCP
-      port: 5015
-      targetPort: 5015  # Puerto del contenedor obtener-calendario
-      nodePort: 30017   # Puerto asignado en los nodos del clúster
+      port: 5019
+      targetPort: 5019  # Puerto del contenedor obtener-calendario
+      nodePort: 30021   # Puerto asignado en los nodos del clúster

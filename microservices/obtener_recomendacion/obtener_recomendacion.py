@@ -193,4 +193,4 @@ def obtener_recomendacion():
         return (json.dumps(respuesta), 404,headers)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001,debug=True)
+    app.run(host='0.0.0.0', port=5018,debug=True)
