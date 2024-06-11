@@ -124,7 +124,7 @@ def crear_usuario():
             print("Codigo: 500. Error al crear el usuario.")
             return (jsonify({'mensaje': 'Ya existe el usuario'}), 400, headers)
         else:
-            return (jsonify({'mensaje': 'Usuario creado exitosamente'}), 201, headers)
+            return (jsonify({'mensaje': 'Usuario creado exitosamente'}, 201, headers))
     except Exception as e:
         print(f"Codigo: 500. Error al crear el usuario: {e}")
         return (jsonify({'mensaje': 'Error al crear el usuario'}), 500, headers)
