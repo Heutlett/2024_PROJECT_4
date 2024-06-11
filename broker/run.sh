@@ -1,9 +1,9 @@
 # Crear docker image en Dockerhub
 eval $(minikube docker-env)
-docker build -t broker:latest .
-docker tag broker:latest jusfb18/broker:latest
-docker login
-docker push jusfb18/broker:latest
+#docker build -t broker:latest .
+#docker tag broker:latest jusfb18/broker:latest
+#docker login
+#docker push jusfb18/broker:latest
 
 # Borrar el POD anterior
 kubectl delete deployment broker
