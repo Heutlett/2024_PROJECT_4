@@ -185,7 +185,7 @@ def obtener_reservas_pasadas(fecha,hora, username, headers):
     respuesta = {}
     
     # La query debe usar fecha y hora para obtener las reservas pasadas
-    query = f"SELECT * FROM Reservations WHERE Date_Reserved < '{fecha}' OR Date_Reserved = '{fecha}' AND Start_Time < '{hora}' WHERE User_ID = '{username}';"
+    query = f"SELECT * FROM Reservations WHERE Date_Reserved < '{fecha}' OR Date_Reserved = '{fecha}' AND Start_Time < '{hora}' AND User_ID = '{username}';"
     result = usar_bd_con_return(query)
     mensaje = {}
     mensaje["data"] = []
@@ -194,15 +194,16 @@ def obtener_reservas_pasadas(fecha,hora, username, headers):
         mensaje["message"] = "No hay reservas pasadas para el usuario."
         return jsonify(mensaje), 500, headers
     for elem in result:
-        mensaje["data"].append({
-            "Reservation_ID": elem[0],
-            "User_ID": elem[1],
-            "Restaurant_ID": elem[2],
-            "Number_Of_People": elem[3],
-            "Date_Reserved": elem[4].strftime('%Y-%m-%d'),  # Convertir a cadena de texto en formato 'YYYY-MM-DD'
-            "Start_Time": elem[5].strftime('%H:%M:%S'),    # Convertir a cadena de texto en formato 'HH:MM:SS'
-            "End_Time": elem[6].strftime('%H:%M:%S')       # Convertir a cadena de texto en formato 'HH:MM:SS'
-        })
+        if username==elem[1]:    
+            mensaje["data"].append({
+                "Reservation_ID": elem[0],
+                "User_ID": elem[1],
+                "Restaurant_ID": elem[2],
+                "Number_Of_People": elem[3],
+                "Date_Reserved": elem[4].strftime('%Y-%m-%d'),  # Convertir a cadena de texto en formato 'YYYY-MM-DD'
+                "Start_Time": elem[5].strftime('%H:%M:%S'),    # Convertir a cadena de texto en formato 'HH:MM:SS'
+                "End_Time": elem[6].strftime('%H:%M:%S')       # Convertir a cadena de texto en formato 'HH:MM:SS'
+            })
 
     return jsonify(mensaje), 200, headers
 

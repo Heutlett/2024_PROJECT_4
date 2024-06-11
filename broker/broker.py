@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 import requests
 import json
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-
+CORS(app)
 
 baseurl = "http://192.168.49.2:"
 
@@ -27,23 +28,8 @@ services = {
 
 # entry point de la cloud function
 @app.route('/<service_name>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+@cross_origin()
 def broker(service_name):
-    if request.method == "OPTIONS":
-        headers = {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Max-Age": "3600",
-        }
-        return ("", 204, headers)
-    
-    headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": "true",
-        "Content-Type": "application/json"
-    }
-    
-
     if service_name in services:
         service_url = services[service_name]
 
@@ -97,16 +83,16 @@ def broker(service_name):
         elif request.method == 'POST':
             try:
                 body = request.json if request.json else {}
-                response = requests.post(service_url, json=body, headers=headers)
+                response = requests.post(service_url, json=body)
             except:
-                return jsonify("Error con los datos"),400,headers
+                return jsonify("Error con los datos"),400
             
         elif request.method == 'PUT':
             try:
                 body = request.json if request.json else {}
-                response = requests.put(service_url, json=body, headers=headers)
+                response = requests.put(service_url, json=body)
             except:
-                return jsonify("Error con los datos"),400,headers
+                return jsonify("Error con los datos")
             
         elif request.method == 'DELETE':
             args = request.args if request.args else {}
@@ -116,10 +102,10 @@ def broker(service_name):
                 reservation_id = args.get('reservation_id')
                 password = args.get('password')
         
-        return response.content, response.status_code,headers
+        return jsonify(response.text, response.status_code)
     else:
         # Si el servicio no es encontrado, retornar error 404
-        return 'Service not found', 404
+        return ('Service not found', 404)
 
 
 if __name__ == '__main__':
