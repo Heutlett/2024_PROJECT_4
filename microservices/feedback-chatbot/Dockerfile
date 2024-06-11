@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Instalar las dependencias del sistema
 RUN apt-get update && \
-    apt-get install -y curl sudo gnupg apt-transport-https
+    apt-get install -y curl sudo gnupg apt-transport-https wget
 
 RUN sudo apt install -y unixodbc unixodbc-dev
 
@@ -24,12 +24,18 @@ RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
 # Copia los archivos de la aplicación
 COPY . .
 
+# Ejecutar el script para descargar la key de los credenciales de gcloud
+RUN chmod +x download_key.sh && ./download_key.sh
+
+# Exportar la variable de entorno de las credenciales
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/key.json
+
 # Instala las dependencias de la aplicación
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Exponer el puerto de la aplicación Flask
-EXPOSE 5001
+EXPOSE 5020
 
 # Define el comando por defecto para ejecutar la aplicación
 CMD ["python", "feedback-chatbot.py"]

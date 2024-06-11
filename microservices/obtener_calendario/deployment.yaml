@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: obtener-calendario
-        image: menaleon/obtener-calendario:latest
+        image: jusfb18/obtener-calendario:latest
         ports:
-        - containerPort: 5015
+        - containerPort: 5019
 

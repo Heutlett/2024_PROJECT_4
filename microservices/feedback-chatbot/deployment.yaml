@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedback-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feedback-chatbot
+  template:
+    metadata:
+      labels:
+        app: feedback-chatbot
+    spec:
+      containers:
+      - name: feedback-chatbot
+        image: jusfb18/feedback-chatbot:latest
+        ports:
+        - containerPort: 5020
+
