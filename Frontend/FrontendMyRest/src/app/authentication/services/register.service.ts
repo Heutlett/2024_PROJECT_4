@@ -1,9 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import {catchError} from 'rxjs/operators'; 
 
-const url = "https://us-central1-soa-project3.cloudfunctions.net/broker"
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +11,18 @@ export class RegisterService {
   constructor(private http:HttpClient) { }
 
   createUser(registerInfo:any):Observable<any>{
-    return this.http.post<any>(url, registerInfo).pipe(catchError(this.handleError));
+    const url = "http://192.168.49.2:30018/crear-usuario"
+    
+    
+
+    return this.http.post<any>(url, registerInfo).pipe(
+      catchError(this.handleError)
+    );
+    //return this.http.post<any>(url, registerInfo).pipe(catchError(this.handleError));
   }
 
   changePassword(passInfo:any){
+    const url = "http://192.168.49.2:30007/cambiar-contrasena"
     return this.http.post<any>(url, passInfo).pipe(catchError(this.handleError));
   }
 

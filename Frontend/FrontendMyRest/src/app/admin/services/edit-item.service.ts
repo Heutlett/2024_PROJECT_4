@@ -3,7 +3,6 @@ import {Observable, throwError} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError} from 'rxjs/operators';
 
-const url = "https://us-central1-soa-project3.cloudfunctions.net/broker"
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +12,13 @@ export class EditItemService {
   constructor(private http:HttpClient) { }
 
   getItemInfo(reservation_id:string):Observable<any>{
-    const url = `https://us-central1-soa-project3.cloudfunctions.net/obtener-reserva/?reservation_id=${reservation_id}`;
+    const url = `http://192.168.49.2:30016/obtener-reserva//?reservation_id=${reservation_id}`;
     return this.http.get<any>(url);
   }
 
   editReservation(schedule:any){
     console.log(schedule)
+    const url = `http://192.168.49.2:30012/editar-reserva`;
     const json= {
       token:localStorage.getItem('token'),
       data:schedule

@@ -10,10 +10,10 @@ export class MenuService {
   constructor(private http:HttpClient) { }
 
   getMenus():Observable<any>{
-    return this.http.get<any>('https://us-central1-soa-project3.cloudfunctions.net/obtener-menu');
+    return this.http.get<any>('http://192.168.49.2:30019/obtener-menu');
   }
 
   getRecomendacion(entry:string):Observable<any>{
-    return this.http.get<any>(`https://us-central1-soa-project3.cloudfunctions.net/obtener-recomendacion/?${entry}`);
+    return this.http.get<any>(`http://192.168.49.2:30020/obtener-recomendacion?${entry}`);
   }
 }

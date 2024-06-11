@@ -3,7 +3,7 @@ import { Observable, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import {catchError} from 'rxjs/operators'; 
 
-const url = "https://us-central1-soa-project3.cloudfunctions.net/broker"
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,7 @@ export class ScheduleService {
   constructor(private http:HttpClient) { }
 
   changeSchedule(schedule:any){
+    const url = "http://192.168.49.2:";
     return this.http.post<any>(url, schedule).pipe(catchError(this.handleError));
   }
 

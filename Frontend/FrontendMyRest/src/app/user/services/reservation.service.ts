@@ -12,22 +12,22 @@ export class ReservationService {
   constructor(private http:HttpClient) { }
 
   getCalendar(date:string, time:string ):Observable<any>{
-    var url = `https://us-central1-soa-project3.cloudfunctions.net/obtener-calendario/?date=${date}&start_time=${time}`
+    var url = `http://192.168.49.2:30021/obtener-calendario/?date=${date}&start_time=${time}`
     return this.http.get<any>(url);
   }
 
   createReservation(reservation:any):Observable<any>{
-    var url = 'https://us-central1-soa-project3.cloudfunctions.net/broker'
+    var url = 'http://192.168.49.2:30010/crear-reserva';
     return this.http.post<any>(url, reservation).pipe(catchError(this.handleError));
   }
 
   userIsValid(userToken:any):Observable<any>{
-    var url = `https://us-central1-soa-project3.cloudfunctions.net/verificar-usuario/?token=${userToken}`
+    var url = `http://192.168.49.2:30010/verificar-usuario?token=${userToken}`
     return this.http.get<any>(url);
   }
 
   deleteReservation(reservation:any):Observable<any>{
-    var url = 'https://us-central1-soa-project3.cloudfunctions.net/broker'
+    var url = 'http://192.168.49.2:'
     return this.http.post<any>(url, reservation).pipe(catchError(this.handleError));
   }
 
