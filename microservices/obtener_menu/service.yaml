@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: obtener-menu-service
+spec:
+  selector:
+    app: obtener-menu
+  type: NodePort
+  ports:
+    - name: obtener-menu
+      protocol: TCP
+      port: 5017
+      targetPort: 5017  # Puerto del contenedor obtener-menu
+      nodePort: 30019   # Puerto asignado en los nodos del clúster

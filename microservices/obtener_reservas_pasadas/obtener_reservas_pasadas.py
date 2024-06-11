@@ -185,10 +185,14 @@ def obtener_reservas_pasadas(fecha,hora, username, headers):
     respuesta = {}
     
     # La query debe usar fecha y hora para obtener las reservas pasadas
-    query = f"SELECT * FROM Reservations WHERE Date_Reserved < '{fecha}' OR Date_Reserved = '{fecha}' AND Start_Time < '{hora}' AND User_ID = '{username}';"
+    query = f"SELECT * FROM Reservations WHERE Date_Reserved < '{fecha}' OR Date_Reserved = '{fecha}' AND Start_Time < '{hora}' WHERE User_ID = '{username}';"
     result = usar_bd_con_return(query)
     mensaje = {}
     mensaje["data"] = []
+    if result is None:
+        mensaje["status"] = 200
+        mensaje["message"] = "No hay reservas pasadas para el usuario."
+        return jsonify(mensaje), 500, headers
     for elem in result:
         mensaje["data"].append({
             "Reservation_ID": elem[0],

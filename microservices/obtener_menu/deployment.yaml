@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtener-menu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obtener-menu
+  template:
+    metadata:
+      labels:
+        app: obtener-menu
+    spec:
+      containers:
+      - name: obtener-menu
+        image: jusfb18/obtener-menu:latest
+        ports:
+        - containerPort: 5017
+
