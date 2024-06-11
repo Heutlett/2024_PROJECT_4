@@ -116,10 +116,10 @@ def broker(service_name):
                 reservation_id = args.get('reservation_id')
                 password = args.get('password')
         
-        return response.content, response.status_code,headers
+        return (response.content, response.status_code,headers)
     else:
         # Si el servicio no es encontrado, retornar error 404
-        return 'Service not found', 404
+        return ('Service not found', 404,headers)
 
 
 if __name__ == '__main__':

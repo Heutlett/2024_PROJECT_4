@@ -2,6 +2,7 @@ import json
 import hashlib
 import pyodbc
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -93,16 +94,16 @@ def crear_usuario():
         security_answer = data.get('data').get('security_answer', None)
     except Exception as e:
         print(f"Error al obtener los datos: {e}")
-        return jsonify({f"mensaje": "Error al obtener los datos"}), 400, headers
+        return (jsonify({f"mensaje": "Error al obtener los datos"}), 400, headers)
 
     if not username or not password or not first_name or not last_name1 or not last_name2 or not security_question or not security_answer:
-        return jsonify({'mensaje': 'Faltan datos en la solicitud de creacion de usuario'}), 400, headers
+        return (jsonify({'mensaje': 'Faltan datos en la solicitud de creacion de usuario'}), 400, headers)
 
 
     # Verificar que el metodo sea correcto
     if data.get('data').get('method') != "crear-usuario":
         print("Codigo: 400. Metodo incorrecto.")
-        return jsonify({'mensaje': 'Metodo incorrecto'}), 400, headers
+        return (jsonify({'mensaje': 'Metodo incorrecto'}), 400, headers)
 
     try:
         # Encriptar la contraseña
@@ -121,12 +122,12 @@ def crear_usuario():
 
         if status == 400:
             print("Codigo: 500. Error al crear el usuario.")
-            return jsonify({'mensaje': 'Ya existe el usuario'}), 400, headers
+            return (jsonify({'mensaje': 'Ya existe el usuario'}), 400, headers)
         else:
-            return jsonify({'mensaje': 'Usuario creado exitosamente'}), 201, headers
+            return (jsonify({'mensaje': 'Usuario creado exitosamente'}), 201, headers)
     except Exception as e:
         print(f"Codigo: 500. Error al crear el usuario: {e}")
-        return jsonify({'mensaje': 'Error al crear el usuario'}), 500, headers
+        return (jsonify({'mensaje': 'Error al crear el usuario'}), 500, headers)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001,debug=True)
